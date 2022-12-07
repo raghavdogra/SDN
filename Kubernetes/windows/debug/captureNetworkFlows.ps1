@@ -2,7 +2,7 @@
 
 Param(
     [parameter(Mandatory = $false)] [string] $NetworkName = "azure",
-    [parameter(Mandatory = $false)] [string] $ServiceEndpoint = "20.124.54.159:5555",
+    [parameter(Mandatory = $false)] [string] $ServiceEndpoint = "52.112.112.224:1936",
     [parameter(Mandatory = $false)] [string] $Verbosity = "Normal"
 )
 
@@ -113,9 +113,9 @@ while ($true) {
         $searchPatternForFlows = $endpointsToMonitor
     }
 
-    $hostVfpPortUnifiedFlows = vfpctrl.exe /port $hostVfpPort /sample-unified-flow "100000 0 1" | Out-String -Stream | Select-String -Pattern $searchPatternForFlows -Context 1, 4 
     $externalVfpPortUnifiedFlows = vfpctrl.exe /port $externalVfpPort /sample-unified-flow "100000 0 1" | Out-String -Stream | Select-String -Pattern $searchPatternForFlows -Context 1, 4
-             
+    $hostVfpPortUnifiedFlows = vfpctrl.exe /port $hostVfpPort /sample-unified-flow "100000 0 1" | Out-String -Stream | Select-String -Pattern $searchPatternForFlows -Context 1, 4 
+                 
     foreach ($externalUnifiedFlow in $externalVfpPortUnifiedFlows) {
         $flowData = $externalUnifiedFlow.ToString() -replace "`r*`n*"
         $message = "{0} {1} {2} {3}" -f "External VFP Port", (Get-Date).ToString(), $(hostname), $flowData
@@ -138,7 +138,7 @@ while ($true) {
         }
     }
 
-    Start-Sleep 10
+    Start-Sleep 5
     $lbPolicy = Get-HnsPolicyList | Where-Object Id -eq $loadBalancerPolicy.Id
     if($null -eq $lbPolicy)
     {
